@@ -500,14 +500,91 @@
             </div>
         </section>
 
-        <!-- SERVICES SECTION (replaced with video showcase) -->
+        <!-- SERVICES SECTION (restored to package cards) -->
         <section id="services" class="services-section packages-section hidden">
             <div class="container">
                 <h2>Popular Car Detailing Services</h2>
-                <p class="section-subtitle">A visual showcase — videos from our work. Videos loop, play at different speeds and staggered start times for a dynamic effect.</p>
-                <div id="video-services" class="video-grid" aria-live="polite">
-                    <!-- JS will populate video cards here with all videos from background-video/ except urus.mp4 -->
+                <p class="section-subtitle">Our most requested services with starting prices. Final cost depends on vehicle size and condition.</p>
+                <div class="package-grid">
+                    <!-- Service 1: Main Interior Detail -->
+                    <div class="package-card" style="background-image: url('pictures/car detailing.png');">
+                        <div class="package-card-content">
+                            <h3>Main Interior Detail</h3>
+                            <p class="package-price">Starts at $75</p>
+                            <p>Deep vacuuming, spot treatment, wipe down of surfaces, and basic odor removal to refresh your cabin.</p>
+                            <a href="#booking" class="btn btn-primary">Book This Service</a>
+                        </div>
+                    </div>
+
+                    <!-- Service 2: Wash and Protect Exterior -->
+                    <div class="package-card" style="background-image: url('pictures/Paint.png');">
+                        <div class="package-card-content">
+                            <h3>Wash & Protect Exterior Detail</h3>
+                            <p class="package-price">Starts at $75</p>
+                            <p>Hand wash, decontamination (clay if needed), and application of a protective sealant to preserve shine.</p>
+                            <a href="#booking" class="btn btn-primary">Book This Service</a>
+                        </div>
+                    </div>
+
+                    <!-- Service 3: Premium Interior Detail -->
+                    <div class="package-card" style="background-image: url('pictures/premium-products.png');">
+                        <div class="package-card-content">
+                            <h3>Premium Interior Detail</h3>
+                            <p class="package-price">Starts at $150</p>
+                            <p>Full interior shampoo, leather conditioning, steam sanitation, and detailed stain treatment for a deep clean.</p>
+                            <a href="#booking" class="btn btn-primary">Book This Service</a>
+                        </div>
+                    </div>
+
+                    <!-- Service 4: Polishing -->
+                    <div class="package-card" style="background-image: url('pictures/steeringwheel.png');">
+                        <div class="package-card-content">
+                            <h3>Polishing</h3>
+                            <p class="package-price">Starts at $120</p>
+                            <p>Paint correction and polishing to remove light scratches and restore gloss and depth to your finish.</p>
+                            <a href="#booking" class="btn btn-primary">Book This Service</a>
+                        </div>
+                    </div>
+
+                    <!-- Service 5: Headlight Restoration -->
+                    <div class="package-card" style="background-image: url('pictures/hdetails.jpg');">
+                        <div class="package-card-content">
+                            <h3>Headlight Restoration</h3>
+                            <p class="package-price">Starts at $80</p>
+                            <p>Restore clarity and brightness to cloudy headlights for improved night visibility and appearance.</p>
+                            <a href="#booking" class="btn btn-primary">Book This Service</a>
+                        </div>
+                    </div>
+
+                    <!-- Service 6: Engine Bay Detailing -->
+                    <div class="package-card" style="background-image: url('pictures/hdetails.jpg');">
+                        <div class="package-card-content">
+                            <h3>Engine Bay Detailing</h3>
+                            <p class="package-price">Starts at $60</p>
+                            <p>Degrease and clean the engine bay to remove grime and leave a neat, presentable finish.</p>
+                            <a href="#booking" class="btn btn-primary">Book This Service</a>
+                        </div>
+                    </div>
+
+                    <!-- Service 7: Ceramic Coating -->
+                    <div class="package-card" style="background-image: url('pictures/premium-products.png');">
+                        <div class="package-card-content">
+                            <h3>Ceramic Coating</h3>
+                            <p class="package-price">Starts at $300</p>
+                            <p>Durable, long-lasting hydrophobic coating that protects paint and makes maintenance easier.</p>
+                            <a href="#booking" class="btn btn-primary">Book This Service</a>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- VIDEO SHOWCASE (separate from services) -->
+        <section id="video-showcase" class="showcase-section hidden">
+            <div class="container">
+                <h2>Video Showcase</h2>
+                <p class="section-subtitle">Recent work — videos loop and rotate.</p>
+                <div id="video-services" class="video-grid" aria-live="polite"></div>
             </div>
         </section>
 
@@ -695,7 +772,14 @@
             // --- NEW: Leaflet.js Map Initialization ---
             // Replace coordinates with your business's central location
             const mapCenter = [29.7604, -95.3698]; // Centered on Houston, TX
-            const map = L.map('map').setView(mapCenter, 10);
+            const map = L.map('map', {
+                center: mapCenter,
+                zoom: 10,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                dragging: true,
+                tap: false
+            });
 
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -726,7 +810,8 @@
                 weight: 2
             }).addTo(map);
 
-            map.fitBounds(servicePolygon.getBounds());
+            // Keep view centered on the mapCenter (Houston). Do not auto-fit to polygon to avoid jump on scroll.
+            map.setView(mapCenter, 10);
         });
     </script>
 </body>

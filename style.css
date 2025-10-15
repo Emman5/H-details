@@ -244,22 +244,31 @@ img, video {
     pointer-events: none;
 }
 
-/* Center the entire site content for symmetry */
-body, .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-main {
-    width: 100%;
-}
-
-/* Make sure inner container content is limited and centered */
+/* Keep container centered by margin:auto; avoid making body a flex container (preserve layout) */
 .container {
     max-width: 1200px;
+    margin: 0 auto;
     padding: 0 20px;
+}
+
+/* Swap hero typography as requested: make the paragraph more prominent and the heading smaller */
+.hero h1 {
+    font-size: 1.9rem;
+    margin-bottom: 8px;
+}
+.hero p {
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* Map sizing: make the map slightly smaller so a single scroll is less disruptive */
+#map {
+    height: 320px; /* reduced from 450px */
+    width: 100%;
+    border-radius: var(--rounded-radius);
+    margin-top: 50px;
+    z-index: 1;
 }
 
 .hero h1 {

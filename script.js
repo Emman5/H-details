@@ -120,15 +120,22 @@ document.addEventListener('DOMContentLoaded', function() {
             try { if (vid.duration && vid.duration > 2) vid.currentTime = Math.min(0.5 + Math.random() * 2, vid.duration - 0.1); } catch(e) {}
         }, startDelay);
 
+        // Track current index per card (start at idx)
+        let currentIndex = idx;
+
         // On ended, swap to next video source to cycle different videos in the same card
         vid.addEventListener('ended', function onEnd() {
-            // find next src index and set it
-            const current = videoList.indexOf(vid.src.split('/').slice(-1)[0]) ;
-            // current detection fallback: use idx variable closure
-            let next = nextIndex(idx);
-            // rotate sources: pick a random other video to keep things dynamic
-            next = Math.floor(Math.random() * videoList.length);
-            vid.src = videoList[next];
+            // pick next index different from currentIndex
+            let next = (currentIndex + 1) % videoList.length;
+            if (videoList.length > 1) {
+                // if same, pick a random different one
+                if (next === currentIndex) {
+                    next = Math.floor(Math.random() * videoList.length);
+                    if (next === currentIndex) next = (currentIndex + 1) % videoList.length;
+                }
+            }
+            currentIndex = next;
+            vid.src = videoList[currentIndex];
             vid.load();
             // slightly vary playbackRate on each loop
             const newRate = rates[Math.floor(Math.random() * rates.length)];
