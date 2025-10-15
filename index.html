@@ -6,7 +6,15 @@
     <title>H-DETAILS - Good Quality, Better Prices</title>
     
     <!-- FAVICON -->
-    <link rel="icon" type="image/jpeg" href="https://placehold.co/32x32/9D4EDD/FFFFFF?text=H">
+    <link rel="icon" type="image/png" href="pictures/hdetails-removebg-preview.png">
+    <!-- Social preview / Open Graph (helps link previews show an image) -->
+    <meta property="og:title" content="H-DETAILS - Good Quality, Better Prices">
+    <meta property="og:description" content="Highly rated car detailing Houston">
+    <meta property="og:image" content="pictures/hdetails.jpg">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="pictures/hdetails.jpg">
+    <link rel="image_src" href="pictures/hdetails.jpg">
 
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -477,7 +485,7 @@
     <main>
         <section class="hero">
             <video class="hero-video" autoplay muted loop playsinline poster="pictures/hdetails.jpg">
-                <source src="background-video/SnapInsta.to_AQNaST8Zn9TQEpRA6TozlRiwuPL5vV2-dQw3NJv_1w27DS2q-rzbHESf_Se_UWFfn2hNCYkCi85Lx11cxs9Yvg0Cf6LQJbEc5_mPD8U.mp4" type="video/mp4">
+                <source src="background-video/urus.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             <div class="hero-overlay"></div>
@@ -492,81 +500,13 @@
             </div>
         </section>
 
-        <!-- SERVICES SECTION -->
+        <!-- SERVICES SECTION (replaced with video showcase) -->
         <section id="services" class="services-section packages-section hidden">
             <div class="container">
                 <h2>Popular Car Detailing Services</h2>
-                <p class="section-subtitle">Our most requested services with starting prices. Final cost depends on vehicle size and condition.</p>
-                <div class="package-grid">
-                    <!-- Service 1: Main Interior Detail -->
-                    <div class="package-card" style="background-image: url('pictures/car detailing.png');">
-                        <div class="package-card-content">
-                            <h3>Main Interior Detail</h3>
-                            <p class="package-price">Starts at $75</p>
-                            <p>Deep vacuuming, spot treatment, wipe down of surfaces, and basic odor removal to refresh your cabin.</p>
-                            <a href="#booking" class="btn btn-primary">Book This Service</a>
-                        </div>
-                    </div>
-
-                    <!-- Service 2: Wash and Protect Exterior -->
-                    <div class="package-card" style="background-image: url('pictures/Paint.png');">
-                        <div class="package-card-content">
-                            <h3>Wash & Protect Exterior Detail</h3>
-                            <p class="package-price">Starts at $75</p>
-                            <p>Hand wash, decontamination (clay if needed), and application of a protective sealant to preserve shine.</p>
-                            <a href="#booking" class="btn btn-primary">Book This Service</a>
-                        </div>
-                    </div>
-
-                    <!-- Service 3: Premium Interior Detail -->
-                    <div class="package-card" style="background-image: url('pictures/premium-products.png');">
-                        <div class="package-card-content">
-                            <h3>Premium Interior Detail</h3>
-                            <p class="package-price">Starts at $150</p>
-                            <p>Full interior shampoo, leather conditioning, steam sanitation, and detailed stain treatment for a deep clean.</p>
-                            <a href="#booking" class="btn btn-primary">Book This Service</a>
-                        </div>
-                    </div>
-
-                    <!-- Service 4: Polishing -->
-                    <div class="package-card" style="background-image: url('pictures/steeringwheel.png');">
-                        <div class="package-card-content">
-                            <h3>Polishing</h3>
-                            <p class="package-price">Starts at $120</p>
-                            <p>Paint correction and polishing to remove light scratches and restore gloss and depth to your finish.</p>
-                            <a href="#booking" class="btn btn-primary">Book This Service</a>
-                        </div>
-                    </div>
-
-                    <!-- Service 5: Headlight Restoration -->
-                    <div class="package-card" style="background-image: url('pictures/hdetails.jpg');">
-                        <div class="package-card-content">
-                            <h3>Headlight Restoration</h3>
-                            <p class="package-price">Starts at $80</p>
-                            <p>Restore clarity and brightness to cloudy headlights for improved night visibility and appearance.</p>
-                            <a href="#booking" class="btn btn-primary">Book This Service</a>
-                        </div>
-                    </div>
-
-                    <!-- Service 6: Engine Bay Detailing -->
-                    <div class="package-card" style="background-image: url('pictures/hdetails.jpg');">
-                        <div class="package-card-content">
-                            <h3>Engine Bay Detailing</h3>
-                            <p class="package-price">Starts at $60</p>
-                            <p>Degrease and clean the engine bay to remove grime and leave a neat, presentable finish.</p>
-                            <a href="#booking" class="btn btn-primary">Book This Service</a>
-                        </div>
-                    </div>
-
-                    <!-- Service 7: Ceramic Coating -->
-                    <div class="package-card" style="background-image: url('pictures/premium-products.png');">
-                        <div class="package-card-content">
-                            <h3>Ceramic Coating</h3>
-                            <p class="package-price">Starts at $300</p>
-                            <p>Durable, long-lasting hydrophobic coating that protects paint and makes maintenance easier.</p>
-                            <a href="#booking" class="btn btn-primary">Book This Service</a>
-                        </div>
-                    </div>
+                <p class="section-subtitle">A visual showcase — videos from our work. Videos loop, play at different speeds and staggered start times for a dynamic effect.</p>
+                <div id="video-services" class="video-grid" aria-live="polite">
+                    <!-- JS will populate video cards here with all videos from background-video/ except urus.mp4 -->
                 </div>
             </div>
         </section>
