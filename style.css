@@ -321,6 +321,15 @@ img, video {
     z-index: 0; /* behind the ::before overlay and content */
 }
 
+/* make sure video doesn't intercept clicks and sits behind content */
+.package-card {
+    position: relative;
+    overflow: hidden;
+}
+.card-bg-video { pointer-events: none; }
+.package-card::before { z-index: 1; }
+.package-card-content { z-index: 2; }
+
 .service-hero {
     display: block; /* Remove flex */
     width: 100%;

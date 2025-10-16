@@ -501,8 +501,7 @@
                 </div>
             </div>
         </section>
-        
-        <!-- (video showcase removed per request) -->
+    
 
         <!-- SERVICES SECTION (restored to package cards) -->
         <section id="services" class="services-section packages-section hidden">
@@ -583,7 +582,6 @@
             </div>
         </section>
 
-        <!-- (removed duplicate video showcase) -->
 
         <!-- NEW: SERVICE AREA SECTION -->
         <section id="service-area" class="service-area-section hidden">
@@ -813,7 +811,7 @@
     </script>
 
         <script>
-            // Randomize package card backgrounds (prefer videos, exclude urus.mp4)
+            // Force video backgrounds for all package cards (exclude urus.mp4). Falls back to poster images if video fails or autoplay is blocked.
             (function() {
                 const videoPool = [
                     'background-video/SnapInsta.to_AQNaST8Zn9TQEpRA6TozlRiwuPL5vV2-dQw3NJv_1w27DS2q-rzbHESf_Se_UWFfn2hNCYkCi85Lx11cxs9Yvg0Cf6LQJbEc5_mPD8U.mp4',
@@ -832,38 +830,72 @@
                     'pictures/uruswheel.png'
                 ];
 
-                const cards = Array.from(document.querySelectorAll('.package-card'));
-                if (!cards.length) return;
+                const grid = document.querySelector('.package-grid');
+                if (!grid) return;
 
-                // Center the Ceramic Coating card by moving it into the middle index
-                const ceramicIndex = cards.findIndex(c => c.textContent && c.textContent.includes('Ceramic Coating'));
+                // collect current cards in DOM order
+                const originalCards = Array.from(grid.querySelectorAll('.package-card'));
+                if (!originalCards.length) return;
+
+                // Find and remove Ceramic Coating card then insert it into middle index
+                const ceramicIndex = originalCards.findIndex(c => c.textContent && c.textContent.includes('Ceramic Coating'));
+                let cards = originalCards.slice();
                 if (ceramicIndex > -1) {
                     const ceramicCard = cards.splice(ceramicIndex, 1)[0];
-                    const middle = Math.floor((cards.length) / 2);
+                    const middle = Math.floor(cards.length / 2);
                     cards.splice(middle, 0, ceramicCard);
                 }
 
-                // Apply backgrounds
-                cards.forEach((card) => {
-                    const preferVideo = Math.random() < 0.7; // 70% video preference
-                    if (preferVideo && videoPool.length) {
-                        const src = videoPool[Math.floor(Math.random() * videoPool.length)];
-                        const vid = document.createElement('video');
-                        vid.className = 'card-bg-video';
-                        vid.src = src;
-                        vid.muted = true;
-                        vid.autoplay = true;
-                        vid.loop = true;
-                        vid.playsInline = true;
-                        vid.setAttribute('playsinline', '');
-                        // insert as first child so overlays and content sit above
-                        card.insertBefore(vid, card.firstChild);
-                        vid.play().catch(() => {});
-                    } else {
-                        // image fallback
-                        const img = imagePool[Math.floor(Math.random() * imagePool.length)];
-                        card.style.backgroundImage = `url('${img}')`;
-                    }
+                // Clear grid and re-append in the new order
+                grid.innerHTML = '';
+                cards.forEach(c => grid.appendChild(c));
+
+                // Assign a video background to every card (repeat videos if pool smaller than cards)
+                cards.forEach((card, idx) => {
+                    // clear any CSS background
+                    card.style.backgroundImage = 'none';
+
+                    // pick a video source (random)
+                    const src = videoPool[Math.floor(Math.random() * videoPool.length)];
+                    const poster = imagePool[idx % imagePool.length];
+
+                    const vid = document.createElement('video');
+                    vid.className = 'card-bg-video';
+                    vid.src = src;
+                    vid.muted = true;
+                    vid.autoplay = true;
+                    vid.loop = true;
+                    vid.playsInline = true;
+                    vid.setAttribute('playsinline', '');
+                    vid.preload = 'auto';
+                    vid.poster = poster;
+                    vid.setAttribute('aria-hidden', 'true');
+
+                    // Inline defensive styles for older browsers
+                    vid.style.position = 'absolute';
+                    vid.style.top = '0';
+                    vid.style.left = '0';
+                    vid.style.width = '100%';
+                    vid.style.height = '100%';
+                    vid.style.objectFit = 'cover';
+                    vid.style.zIndex = '0';
+                    vid.style.pointerEvents = 'none';
+
+                    // Error handler: fallback to poster as CSS background
+                    vid.addEventListener('error', function() {
+                        try { vid.remove(); } catch(e) {}
+                        card.style.backgroundImage = `url('${poster}')`;
+                    });
+
+                    // Autoplay may be blocked — handle promise rejection
+                    vid.play().catch(() => {
+                        // hide video element and use poster background
+                        vid.style.display = 'none';
+                        card.style.backgroundImage = `url('${poster}')`;
+                    });
+
+                    // Insert video as first child so overlays (::before) and content appear above
+                    card.insertBefore(vid, card.firstChild);
                 });
             })();
         </script>
