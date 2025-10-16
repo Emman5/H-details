@@ -255,7 +255,8 @@
         
         .package-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+            justify-content: center; /* center the grid on the page */
             gap: 30px;
             margin-top: 50px;
         }
@@ -490,8 +491,9 @@
             </video>
             <div class="hero-overlay"></div>
             <div class="hero-content">
-                <h1>Your car deserves the best, we deliver it</h1>
-                <p>Highly rated car detailing Houston</p>
+                <!-- Swapped: make the phrase below the main large heading -->
+                <h1 class="hero-main">Highly rated car detailing Houston</h1>
+                <p class="hero-sub">Your car deserves the best, we deliver it</p>
                 <div class="hero-buttons">
                     <!-- UPDATED BUTTONS -->
                     <a href="#booking" class="btn btn-primary">Book An Appointment</a>
@@ -499,6 +501,8 @@
                 </div>
             </div>
         </section>
+        
+        <!-- (video showcase removed per request) -->
 
         <!-- SERVICES SECTION (restored to package cards) -->
         <section id="services" class="services-section packages-section hidden">
@@ -579,14 +583,7 @@
             </div>
         </section>
 
-        <!-- VIDEO SHOWCASE (separate from services) -->
-        <section id="video-showcase" class="showcase-section hidden">
-            <div class="container">
-                <h2>Video Showcase</h2>
-                <p class="section-subtitle">Recent work — videos loop and rotate.</p>
-                <div id="video-services" class="video-grid" aria-live="polite"></div>
-            </div>
-        </section>
+        <!-- (removed duplicate video showcase) -->
 
         <!-- NEW: SERVICE AREA SECTION -->
         <section id="service-area" class="service-area-section hidden">
@@ -814,6 +811,62 @@
             map.setView(mapCenter, 10);
         });
     </script>
+
+        <script>
+            // Randomize package card backgrounds (prefer videos, exclude urus.mp4)
+            (function() {
+                const videoPool = [
+                    'background-video/SnapInsta.to_AQNaST8Zn9TQEpRA6TozlRiwuPL5vV2-dQw3NJv_1w27DS2q-rzbHESf_Se_UWFfn2hNCYkCi85Lx11cxs9Yvg0Cf6LQJbEc5_mPD8U.mp4',
+                    'background-video/berto.mp4',
+                    'background-video/redhelcat.mp4',
+                    'background-video/beigehellcat.mp4'
+                ];
+                const imagePool = [
+                    'pictures/car detailing.png',
+                    'pictures/Paint.png',
+                    'pictures/premium-products.png',
+                    'pictures/steeringwheel.png',
+                    'pictures/hdetails.jpg',
+                    'pictures/bertowheel.png',
+                    'pictures/redhellcatwheel.png',
+                    'pictures/uruswheel.png'
+                ];
+
+                const cards = Array.from(document.querySelectorAll('.package-card'));
+                if (!cards.length) return;
+
+                // Center the Ceramic Coating card by moving it into the middle index
+                const ceramicIndex = cards.findIndex(c => c.textContent && c.textContent.includes('Ceramic Coating'));
+                if (ceramicIndex > -1) {
+                    const ceramicCard = cards.splice(ceramicIndex, 1)[0];
+                    const middle = Math.floor((cards.length) / 2);
+                    cards.splice(middle, 0, ceramicCard);
+                }
+
+                // Apply backgrounds
+                cards.forEach((card) => {
+                    const preferVideo = Math.random() < 0.7; // 70% video preference
+                    if (preferVideo && videoPool.length) {
+                        const src = videoPool[Math.floor(Math.random() * videoPool.length)];
+                        const vid = document.createElement('video');
+                        vid.className = 'card-bg-video';
+                        vid.src = src;
+                        vid.muted = true;
+                        vid.autoplay = true;
+                        vid.loop = true;
+                        vid.playsInline = true;
+                        vid.setAttribute('playsinline', '');
+                        // insert as first child so overlays and content sit above
+                        card.insertBefore(vid, card.firstChild);
+                        vid.play().catch(() => {});
+                    } else {
+                        // image fallback
+                        const img = imagePool[Math.floor(Math.random() * imagePool.length)];
+                        card.style.backgroundImage = `url('${img}')`;
+                    }
+                });
+            })();
+        </script>
 </body>
 </html>
 

@@ -102,8 +102,9 @@ img, video {
 
 .navbar .container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column; /* stack logo and nav for perfect horizontal symmetry */
     align-items: center;
+    gap: 10px;
 }
 
 .navbar .logo img {
@@ -114,6 +115,7 @@ img, video {
     list-style: none;
     display: flex;
     gap: 40px;
+    justify-content: center;
 }
 
 .main-nav ul li a {
@@ -252,14 +254,17 @@ img, video {
 }
 
 /* Swap hero typography as requested: make the paragraph more prominent and the heading smaller */
-.hero h1 {
-    font-size: 1.9rem;
+.hero-main {
+    font-size: 3.6rem;
     margin-bottom: 8px;
-}
-.hero p {
-    font-size: 2.8rem;
-    margin-bottom: 30px;
     font-weight: 700;
+    line-height: 1.1;
+}
+.hero-sub {
+    font-size: 1.25rem;
+    margin-bottom: 22px;
+    color: var(--text-muted);
+    font-weight: 500;
 }
 
 /* Map sizing: make the map slightly smaller so a single scroll is less disruptive */
@@ -294,11 +299,26 @@ img, video {
 
 /* --- Services Section --- */
 .services-section {
-    display: block; /* Remove flex */
+    display: block;
     width: 100%;
-    max-width: 700px;
+    max-width: none; /* allow full width for symmetric grid */
     margin: 0 auto;
     padding: 100px 0;
+}
+
+/* Make the package grid centered within the services section */
+.packages-section .package-grid {
+    justify-content: center;
+}
+
+/* Background videos inside package cards */
+.card-bg-video {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0; /* behind the ::before overlay and content */
 }
 
 .service-hero {
@@ -372,22 +392,25 @@ img, video {
     width: 100%;
     margin: 0 auto;
     padding: 20px;
-    background-color: var(--light-bg);
-    text-align: center;
-    min-height: 200px;
+    background-color: var(--dark-bg);
+    border-radius: var(--rounded-radius);
     display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.instagram-feed-container iframe {
-    width: 100% !important;
-}
-
-/* --- Gallery Section --- */
-.gallery-section {
-    padding: 100px 0;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--light-bg);
+    /* --- EDITED STYLES FOR BACKGROUND IMAGE --- */
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    min-height: 420px;
+    justify-content: flex-end; /* Aligns content to the bottom */
+    padding: 0;
+    width: 100%;
+    max-width: 320px; /* consistent card width helps centering odd last items */
     background-color: var(--light-bg);
+/* Ensure package grid items center within their cells */
+    justify-items: center;
 }
 
 .gallery-grid {
