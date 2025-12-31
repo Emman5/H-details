@@ -210,6 +210,8 @@
             height: auto;
             transform: translateX(-50%) translateY(-50%);
             z-index: -1;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* smooth fade/shift on scroll */
+            will-change: opacity, transform;
         }
 
         .hero-overlay {
@@ -220,11 +222,59 @@
             height: 100%;
             background: rgba(0,0,0,0.5);
             z-index: 0;
+            transition: background-color 0.6s ease-out, opacity 0.6s ease-out;
+            pointer-events: none;
         }
 
         .hero-content {
             position: relative;
             z-index: 1;
+        }
+
+        /* --- Services cards: prepare for staggered reveal --- */
+        .package-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .package-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- FAQ hover/fade behavior --- */
+        .faq-answer {
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.3s ease-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        /* Hover on desktop: quick fade in without changing active state */
+        @media (hover: hover) and (pointer: fine) {
+            .faq-item:hover .faq-answer {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 200px; /* small expand on hover */
+            }
+        }
+
+        /* Active / clicked state still expands fully */
+        .faq-item.active .faq-answer {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 800px; /* allow full expansion when opened */
+        }
+
+        /* --- Booking image fade-in --- */
+        .booking-image {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.8s ease-out, transform 0.6s ease-out;
+        }
+        .booking-image.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .hero h1 {
@@ -721,19 +771,52 @@
                 });
             });
 
-            // --- Scroll Animation Logic (Intersection Observer) ---
+            // --- Scroll + Reveal Animation Logic (Intersection Observer) ---
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('show');
+                        const el = entry.target;
+                        // Special behavior for services: stagger child cards
+                        if (el.classList.contains('packages-section') || el.id === 'services') {
+                            const cards = el.querySelectorAll('.package-card');
+                            cards.forEach((card, idx) => {
+                                setTimeout(() => card.classList.add('show'), idx * 150);
+                            });
+                            observer.unobserve(el);
+                            return;
+                        }
+
+                        // Booking section: fade in booking image with a subtle delay
+                        if (el.id === 'booking') {
+                            const img = el.querySelector('.booking-image');
+                            if (img) setTimeout(() => img.classList.add('show'), 600);
+                            observer.unobserve(el);
+                            return;
+                        }
+
+                        // Generic reveal
+                        el.classList.add('show');
+                        observer.unobserve(el);
                     }
                 });
             }, {
-                threshold: 0.1
+                threshold: 0.12
             });
 
             const hiddenElements = document.querySelectorAll('.hidden');
             hiddenElements.forEach((el) => observer.observe(el));
+
+            // --- Hero video fade/cover on scroll ---
+            const heroVideo = document.querySelector('.hero-video');
+            const heroOverlay = document.querySelector('.hero-overlay');
+            window.addEventListener('scroll', () => {
+                if (!heroVideo || !heroOverlay) return;
+                const ratio = Math.min(window.scrollY / (window.innerHeight * 0.9), 1);
+                heroVideo.style.opacity = String(1 - ratio * 0.6); // fades down to ~0.4
+                heroOverlay.style.background = `rgba(0,0,0,${0.5 + ratio * 0.6})`;
+                // subtle parallax/shift
+                heroVideo.style.transform = `translateX(-50%) translateY(${ -50 + ratio * 10 }%) scale(${1 - ratio * 0.02})`;
+            });
 
             // --- Contact Modal Logic ---
             const contactLinks = document.querySelectorAll('.contact-link, a[href="#contact-modal"]');
@@ -759,27 +842,73 @@
                 }
             });
             
-            // --- NEW: FAQ Accordion Logic ---
+            // --- NEW: FAQ Accordion & Hover Logic ---
             const faqItems = document.querySelectorAll('.faq-item');
+            const isTouchDevice = window.matchMedia('(hover: none)').matches || ('ontouchstart' in window);
+
             faqItems.forEach(item => {
                 const question = item.querySelector('.faq-question');
                 const answer = item.querySelector('.faq-answer');
-                
+
+                // Click behavior (works for mobile & desktop clicks)
                 question.addEventListener('click', () => {
                     const isActive = item.classList.contains('active');
-                    
+
+                    // Clear any pending close timeout on all items
+                    faqItems.forEach(otherItem => {
+                        if (otherItem._closeTimeout) {
+                            clearTimeout(otherItem._closeTimeout);
+                            otherItem._closeTimeout = null;
+                        }
+                    });
+
                     // Close all other items
                     faqItems.forEach(otherItem => {
-                        otherItem.classList.remove('active');
-                        otherItem.querySelector('.faq-answer').style.maxHeight = 0;
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                            otherItem.querySelector('.faq-answer').style.maxHeight = 0;
+                            otherItem.querySelector('.faq-answer').style.opacity = 0;
+                        }
                     });
-                    
-                    // Open the clicked item if it wasn't already active
+
+                    // Toggle clicked item
                     if (!isActive) {
+                        // open
                         item.classList.add('active');
                         answer.style.maxHeight = answer.scrollHeight + 'px';
+                        answer.style.opacity = 1;
+
+                        // On touch devices, auto-close after 5 seconds if not interacted with
+                        if (isTouchDevice) {
+                            item._closeTimeout = setTimeout(() => {
+                                item.classList.remove('active');
+                                answer.style.maxHeight = 0;
+                                answer.style.opacity = 0;
+                                item._closeTimeout = null;
+                            }, 5000);
+                        }
+                    } else {
+                        // close
+                        item.classList.remove('active');
+                        answer.style.maxHeight = 0;
+                        answer.style.opacity = 0;
                     }
                 });
+
+                // Make sure hovering (desktop) only shows the answer visually without toggling active state
+                if (!isTouchDevice) {
+                    item.addEventListener('mouseenter', () => {
+                        answer.style.opacity = 1;
+                        answer.style.maxHeight = '200px';
+                    });
+                    item.addEventListener('mouseleave', () => {
+                        // Only hide on leave if not active (clicked)
+                        if (!item.classList.contains('active')) {
+                            answer.style.opacity = 0;
+                            answer.style.maxHeight = 0;
+                        }
+                    });
+                }
             });
 
             // --- NEW: Leaflet.js Map Initialization ---
