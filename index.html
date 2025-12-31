@@ -397,6 +397,23 @@
             min-height: 800px;
         }
 
+        /* Booking image styling */
+        .booking-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
+
+        .booking-image {
+            max-width: 420px;
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.03);
+            display: block;
+        }
+
         /* --- Showcase Section --- */
         .tiktok-btn {
             display: flex;
@@ -650,10 +667,12 @@
              <div class="container">
                  <h2>Book Your Appointment</h2>
                  <p class="section-subtitle">Select a service and find a time that works for you. We'll handle the rest.</p>
-                <!-- Calendly Inline Widget Begin -->
-                <!-- IMPORTANT: Replace the URL below with your actual Calendly link -->
-                <div class="calendly-inline-widget" data-url="https://calendly.com/emmanueladeleye693/30min" style="min-width:320px;height:700px;"></div>
-                <!-- Calendly Inline Widget End -->
+                <!-- Booking Image Link -->
+                <div class="booking-image-container">
+                    <a href="https://pocketsuite.io/book/h-details" target="_blank" rel="noopener noreferrer">
+                        <img src="pictures/book-now.png" alt="Book with H-DETAILS" class="booking-image">
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -677,8 +696,7 @@
     <!-- LEAFLET.JS FOR FREE MAPS (JAVASCRIPT) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
-    <!-- CALENDLY WIDGET SCRIPT -->
-    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
 
     <!-- ALL JAVASCRIPT IS INCLUDED HERE -->
     <script>
